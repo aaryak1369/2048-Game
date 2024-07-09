@@ -165,7 +165,22 @@ def move_tiles(window, tiles, clock, direction):
         )
         ceil = False
 
+def end_move(tiles):
+    if len(tiles) == 16:
+        return "lost"
 
+    row, col = get_random_pos(tiles)
+    tiles[f"{row}{col}"] = Tile(random.choice([2, 4]), row, col)
+    return "continue"
+
+
+def update_tiles(window, tiles, sorted_tiles):
+    tiles.clear()
+    for tile in sorted_tiles:
+        tiles[f"{tile.row}{tile.col}"] = tile
+
+    draw(window, tiles)
+    
 def generate_tiles():
     tiles = {}
     for _ in range(2):
