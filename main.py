@@ -44,6 +44,26 @@ class Tile:
         (236, 202, 80),
     ]
 
+    def __init__(self, value, row, col):
+        self.value = value
+        self.row = row
+        self.col = col
+        self.x = col * RECT_WIDTH
+        self.y = row * RECT_HEIGHT
+
+
+def get_random_pos(tiles):
+    row = None
+    col = None
+    while True:
+        row = random.randrange(0, ROWS)
+        col = random.randrange(0, COLS)
+
+        if f"{row}{col}" not in tiles:
+            break
+
+    return row, col
+
 def generate_tiles():
     tiles = {}
     for _ in range(2):
@@ -53,7 +73,7 @@ def generate_tiles():
     return tiles
 
 def main(window):
-    
+
     # regulates speed of the game loop
     clock = pygame.time.Clock()
     run = True
