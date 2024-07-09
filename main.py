@@ -164,6 +164,40 @@ def move_tiles(window, tiles, clock, direction):
             lambda tile, next_tile: tile.y + RECT_HEIGHT + MOVE_VELOCITY < next_tile.y
         )
         ceil = False
+    while updated:
+        clock.tick(FPS)
+        updated = False
+        sorted_tiles = sorted(tiles.values(), key=sort_func, reverse=reverse)
+
+        for i, tile in enumerate(sorted_tiles):
+            if boundary_check(tile):
+                continue
+
+            next_tile = get_next_tile(tile)
+            if not next_tile:
+                tile.move(delta)
+            elif (
+                tile.value == next_tile.value
+                and tile not in blocks
+                and next_tile not in blocks
+            ):
+                if merge_check(tile, next_tile):
+                    tile.move(delta)
+                else:
+                    next_tile.value *= 2
+                    sorted_tiles.pop(i)
+                    blocks.add(next_tile)
+            elif move_check(tile, next_tile):
+                tile.move(delta)
+            else:
+                continue
+
+            tile.set_pos(ceil)
+            updated = True
+
+        update_tiles(window, tiles, sorted_tiles)
+
+    return end_move(tiles)
 
 def end_move(tiles):
     if len(tiles) == 16:
@@ -180,7 +214,7 @@ def update_tiles(window, tiles, sorted_tiles):
         tiles[f"{tile.row}{tile.col}"] = tile
 
     draw(window, tiles)
-    
+
 def generate_tiles():
     tiles = {}
     for _ in range(2):
