@@ -68,6 +68,19 @@ class Tile:
                 self.y + (RECT_HEIGHT / 2 - text.get_height() / 2),
             ),
         )
+    
+    def set_pos(self, ceil=False):
+        if ceil:
+            self.row = math.ceil(self.y / RECT_HEIGHT)
+            self.col = math.ceil(self.x / RECT_WIDTH)
+        else:
+            self.row = math.floor(self.y / RECT_HEIGHT)
+            self.col = math.floor(self.x / RECT_WIDTH)
+
+    def move(self, delta):
+        self.x += delta[0]
+        self.y += delta[1]
+
 
 def draw_grid(window):
     for row in range(1, ROWS):
@@ -82,7 +95,7 @@ def draw_grid(window):
 
 
 def draw(window, tiles):
-    window.fill(BACKGROUND_COLOR)
+    window.fill(BG_COLOR)
 
     for tile in tiles.values():
         tile.draw(window)
@@ -90,7 +103,7 @@ def draw(window, tiles):
     draw_grid(window)
 
     pygame.display.update()
-    
+
 def get_random_pos(tiles):
     row = None
     col = None
