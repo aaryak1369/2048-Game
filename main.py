@@ -31,13 +31,34 @@ FONT = pygame.font.SysFont("sans", 60, bold=True)
 
 MOVE_VELOCITY = 20
 
+class Tile:
+    COLORS = [
+        (237, 229, 218),
+        (238, 225, 201),
+        (243, 178, 122),
+        (246, 150, 101),
+        (247, 124, 95),
+        (247, 95, 59),
+        (237, 208, 115),
+        (237, 204, 99),
+        (236, 202, 80),
+    ]
+
+def generate_tiles():
+    tiles = {}
+    for _ in range(2):
+        row, col = get_random_pos(tiles)
+        tiles[f"{row}{col}"] = Tile(2, row, col)
+
+    return tiles
 
 def main(window):
+    
     # regulates speed of the game loop
     clock = pygame.time.Clock()
     run = True
 
-    # tiles = generate_tiles()
+    tiles = generate_tiles()
 
     while run:
         clock.tick(FPS)
