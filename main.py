@@ -116,6 +116,56 @@ def get_random_pos(tiles):
 
     return row, col
 
+def move_tiles(window, tiles, clock, direction):
+    updated = True
+    blocks = set()
+
+    if direction == "left":
+        sort_func = lambda x: x.col
+        reverse = False
+        delta = (-MOVE_VELOCITY, 0)
+        boundary_check = lambda tile: tile.col == 0
+        get_next_tile = lambda tile: tiles.get(f"{tile.row}{tile.col - 1}")
+        merge_check = lambda tile, next_tile: tile.x > next_tile.x + MOVE_VELOCITY
+        move_check = (
+            lambda tile, next_tile: tile.x > next_tile.x + RECT_WIDTH + MOVE_VELOCITY
+        )
+        ceil = True
+    elif direction == "right":
+        sort_func = lambda x: x.col
+        reverse = True
+        delta = (MOVE_VELOCITY, 0)
+        boundary_check = lambda tile: tile.col == COLS - 1
+        get_next_tile = lambda tile: tiles.get(f"{tile.row}{tile.col + 1}")
+        merge_check = lambda tile, next_tile: tile.x < next_tile.x - MOVE_VELOCITY
+        move_check = (
+            lambda tile, next_tile: tile.x + RECT_WIDTH + MOVE_VELOCITY < next_tile.x
+        )
+        ceil = False
+    elif direction == "up":
+        sort_func = lambda x: x.row
+        reverse = False
+        delta = (0, -MOVE_VELOCITY)
+        boundary_check = lambda tile: tile.row == 0
+        get_next_tile = lambda tile: tiles.get(f"{tile.row - 1}{tile.col}")
+        merge_check = lambda tile, next_tile: tile.y > next_tile.y + MOVE_VELOCITY
+        move_check = (
+            lambda tile, next_tile: tile.y > next_tile.y + RECT_HEIGHT + MOVE_VELOCITY
+        )
+        ceil = True
+    elif direction == "down":
+        sort_func = lambda x: x.row
+        reverse = True
+        delta = (0, MOVE_VELOCITY)
+        boundary_check = lambda tile: tile.row == ROWS - 1
+        get_next_tile = lambda tile: tiles.get(f"{tile.row + 1}{tile.col}")
+        merge_check = lambda tile, next_tile: tile.y < next_tile.y - MOVE_VELOCITY
+        move_check = (
+            lambda tile, next_tile: tile.y + RECT_HEIGHT + MOVE_VELOCITY < next_tile.y
+        )
+        ceil = False
+
+
 def generate_tiles():
     tiles = {}
     for _ in range(2):
